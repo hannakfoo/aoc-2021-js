@@ -20,25 +20,41 @@ var polymerInstruction = {
 
 console.log(JSON.stringify(polymerInstruction, null, 2));
 
-function MatchRules(polymerInstruction) {
+function MatchRules(polymer) {
+  console.log(`polymer: ${polymer.polymerTemplate}`);
+  var result;
+  var insertRules = [];
   for (var i = 0; i < polymerInstruction.rules.length; i++) {
-    var rule = `${polymerInstruction.rules[i].matchPair}`
-    var match = polymerInstruction.polymerTemplate.match(rule);
+    var rule = `${polymerInstruction.rules[i].matchPair}`;
+
+    var match = polymer.polymerTemplate.match(rule);
     if (match) {
       var matchIndex = match.index;
-      polymerInstruction.polymerTemplate =
-      polymerInstruction.polymerTemplate.substring(0, matchIndex + 1) +
-        rules[i].insertChar +
-        polymerInstruction.polymerTemplate.substring(matchIndex + 1);
-
-      return polymerInstruction;
+      insertRules.push({
+        matchIndex: matchIndex,
+        insertChar: polymerInstruction.rules[i].insertChar,
+      });
     }
   }
-  return polymerInstruction;
+  return insertRules;
 }
-polymerInstruction = MatchRules(polymerInstruction);
-console.log(polymerInstruction.polymerTemplate);
 
+for (i = 0; i < 3; i++) {
+  var rules = MatchRules(polymerInstruction);
+  var resultArray = polymerInstruction.polymerTemplate.split("");
+
+  let count = 1;
+  rules.forEach((rule) => {
+    resultArray.splice(rule.matchIndex + count, 0, rule.insertChar);
+    count++;
+  });
+
+  console.log(resultArray.join(""));
+  polymerInstruction.polymerTemplate = resultArray.join("");
+}
+
+// polymer.polymerTemplate = polymer.polymerTemplate.substring(0, matchIndex + 1) + polymer.rules[i].insertChar + polymerInstruction.polymerTemplate.substring(matchIndex + 1);
+// console.log(`new:${polymer.polymerTemplate}`);
 // for (var i = 0; i < rules.length; i++) {
 //   var rule = `${rules[i].matchPair}`.replace(' ',"");
 //   var match = polymerTemplate.match(rule);
