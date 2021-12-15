@@ -32,6 +32,7 @@ function MatchRules(polymer) {
       var matchIndex = match.index;
       insertRules.push({
         matchIndex: matchIndex,
+        pair : polymerInstruction.rules[i].matchPair.split(""),
         insertChar: polymerInstruction.rules[i].insertChar,
       });
     }
@@ -39,13 +40,15 @@ function MatchRules(polymer) {
   return insertRules;
 }
 
-for (i = 0; i < 3; i++) {
+for (i = 0; i < 4; i++) {
   var rules = MatchRules(polymerInstruction);
   var resultArray = polymerInstruction.polymerTemplate.split("");
 
+  rules = rules.sort(function(a, b) { return a.matchIndex - b.matchIndex; });
+
   let count = 1;
   rules.forEach((rule) => {
-    resultArray.splice(rule.matchIndex + count, 0, rule.insertChar);
+    resultArray.splice(rule.matchIndex + count , 0, rule.insertChar);
     count++;
   });
 
